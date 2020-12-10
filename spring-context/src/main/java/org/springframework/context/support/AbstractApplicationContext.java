@@ -552,7 +552,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			StartupStep contextRefresh = this.applicationStartup.start("spring.context.refresh");
 
 			// Prepare this context for refreshing.
-			// 准备上下文环境
+			// 一些准备工作
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
@@ -637,6 +637,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment.
+		// 初始化配置的属性值
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable:
@@ -1451,7 +1452,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * or return a single BeanFactory instance that it holds. In the latter case, it will
 	 * usually throw an IllegalStateException if refreshing the context more than once.
 	 * @throws BeansException if initialization of the bean factory failed
-	 * @throws IllegalStateException if already initialized and multiple refresh
+	 * @throws IllegalStateException if already initialized and multiple
 	 * attempts are not supported
 	 */
 	protected abstract void refreshBeanFactory() throws BeansException, IllegalStateException;

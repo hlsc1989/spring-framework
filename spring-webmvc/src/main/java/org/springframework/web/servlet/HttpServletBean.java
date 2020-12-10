@@ -149,10 +149,12 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 	public final void init() throws ServletException {
 
 		// Set bean properties from init parameters.
+		// 初始化servlet,getServletConfig()拿到配置的servlet参数，xml格式，springMvc是contextConfigLocation来配置
 		PropertyValues pvs = new ServletConfigPropertyValues(getServletConfig(), this.requiredProperties);
 		if (!pvs.isEmpty()) {
 			try {
 				BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
+				// 获取资源加载器
 				ResourceLoader resourceLoader = new ServletContextResourceLoader(getServletContext());
 				bw.registerCustomEditor(Resource.class, new ResourceEditor(resourceLoader, getEnvironment()));
 				initBeanWrapper(bw);
@@ -167,6 +169,7 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 		}
 
 		// Let subclasses do whatever initialization they like.
+		// 初始化ServletBean，实现在字类FrameworkServlet里面
 		initServletBean();
 	}
 
@@ -223,8 +226,11 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 
 			Enumeration<String> paramNames = config.getInitParameterNames();
 			while (paramNames.hasMoreElements()) {
+				// 获取参数
 				String property = paramNames.nextElement();
+				// 获取参数的值
 				Object value = config.getInitParameter(property);
+				// 将参数和值放进属性列表
 				addPropertyValue(new PropertyValue(property, value));
 				if (missingProps != null) {
 					missingProps.remove(property);
