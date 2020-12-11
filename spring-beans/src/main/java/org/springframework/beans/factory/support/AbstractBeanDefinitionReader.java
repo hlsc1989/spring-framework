@@ -221,6 +221,8 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 		if (resourceLoader instanceof ResourcePatternResolver) {
 			// Resource pattern matching available.
 			try {
+				// 将指定位置的Bean配置信息解析为 Spring IOC容器封装的资源
+				// 加载多个指定位置的Bean配置信息
 				Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
 				int count = loadBeanDefinitions(resources);
 				if (actualResources != null) {
@@ -240,7 +242,7 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 			// Can only load single resources by absolute URL.
 			// 获取配置的文件
 			Resource resource = resourceLoader.getResource(location);
-			// 加载配置文件
+			// 加载配置文件，委派子类实现
 			int count = loadBeanDefinitions(resource);
 			if (actualResources != null) {
 				actualResources.add(resource);

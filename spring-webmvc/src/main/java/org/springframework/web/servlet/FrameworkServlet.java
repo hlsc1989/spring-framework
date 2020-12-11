@@ -662,7 +662,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 					"] is not of type ConfigurableWebApplicationContext");
 		}
 
-		// 通过反射，实例化容器
+		// 通过反射，实例化子容器
 		ConfigurableWebApplicationContext wac =
 				(ConfigurableWebApplicationContext) BeanUtils.instantiateClass(contextClass);
 

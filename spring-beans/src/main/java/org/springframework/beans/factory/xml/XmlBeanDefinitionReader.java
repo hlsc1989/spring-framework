@@ -335,6 +335,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			if (encodedResource.getEncoding() != null) {
 				inputSource.setEncoding(encodedResource.getEncoding());
 			}
+			// 真正将配置文件解析成 BeanDefinition
 			return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
 		}
 		catch (IOException ex) {
@@ -387,6 +388,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			throws BeanDefinitionStoreException {
 
 		try {
+			// 将xml解析成Document
 			Document doc = doLoadDocument(inputSource, resource);
 			// 开始注册
 			int count = registerBeanDefinitions(doc, resource);
@@ -508,6 +510,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
+
+		// getRegistry此时 是 DefaultListableBeanFactory
 		int countBefore = getRegistry().getBeanDefinitionCount();
 		// 注册
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
