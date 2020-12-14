@@ -599,7 +599,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			// support or the context injected at construction time had already been
 			// refreshed -> trigger initial onRefresh manually here.
 			synchronized (this.onRefreshMonitor) {
-				// 启动容器
+				// 启动
 				onRefresh(wac);
 			}
 		}
@@ -672,10 +672,12 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		wac.setParent(parent);
 		// 获取配置文件的路径
 		String configLocation = getContextConfigLocation();
+		// 定位到配置文件
 		if (configLocation != null) {
 			wac.setConfigLocation(configLocation);
 		}
 
+		// 启动web容器
 		configureAndRefreshWebApplicationContext(wac);
 
 		return wac;
