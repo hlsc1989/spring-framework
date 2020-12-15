@@ -125,12 +125,12 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			closeBeanFactory();
 		}
 		try {
-			// 创建 IOC容器，这个容器是干啥的？
+			// 创建 IOC容器
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
 			beanFactory.setSerializationId(getId());
-			// 对IOC容器进行定制化，如设置启动参数，开启注解的自动装配等
+			// 对IOC容器进行定制化
 			customizeBeanFactory(beanFactory);
-			// 将配置文件里面的信息封装成 BeanDefinition，委派
+			// 将配置文件里面的信息封装成 BeanDefinition，委派，怎么知道是哪个子类？之前已经定义了，在容器创建的时候，如果不配置，默认是XmlWebApplicationContext
 			loadBeanDefinitions(beanFactory);
 			this.beanFactory = beanFactory;
 		}
@@ -216,9 +216,11 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * @see DefaultListableBeanFactory#setAllowEagerClassLoading
 	 */
 	protected void customizeBeanFactory(DefaultListableBeanFactory beanFactory) {
+		// 是否允许相同名称重新注册不同的bean实现
 		if (this.allowBeanDefinitionOverriding != null) {
 			beanFactory.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
 		}
+		// 是否允许bean之间的循环引用，并自动尝试解析它们
 		if (this.allowCircularReferences != null) {
 			beanFactory.setAllowCircularReferences(this.allowCircularReferences);
 		}
