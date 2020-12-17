@@ -586,6 +586,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// Check for listener beans and register them.
 				registerListeners();
 
+				// 初始化lazy-init=false的 单例bean，DI其中的一个入口
 				// Instantiate all remaining (non-lazy-init) singletons.
 				finishBeanFactoryInitialization(beanFactory);
 
@@ -678,6 +679,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
 		// refreshBeanFactory 采用委派设计模式，父类定义抽象的refreshBeanFactory()方法，具体实现由子类来
 		refreshBeanFactory();
+
 		return getBeanFactory();
 	}
 
@@ -923,6 +925,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Allow for caching all bean definition metadata, not expecting further changes.
 		beanFactory.freezeConfiguration();
 
+		// 初始化lazy-init=false的 单例bean
 		// Instantiate all remaining (non-lazy-init) singletons.
 		beanFactory.preInstantiateSingletons();
 	}
