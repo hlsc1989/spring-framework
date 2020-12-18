@@ -345,6 +345,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				if (mbd.isSingleton()) {
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
+							// 创建 Bean
 							return createBean(beanName, mbd, args);
 						}
 						catch (BeansException ex) {
@@ -363,6 +364,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					Object prototypeInstance = null;
 					try {
 						beforePrototypeCreation(beanName);
+						// 创建 Bean
 						prototypeInstance = createBean(beanName, mbd, args);
 					}
 					finally {
@@ -384,6 +386,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						Object scopedInstance = scope.get(beanName, () -> {
 							beforePrototypeCreation(beanName);
 							try {
+								// 创建 Bean
 								return createBean(beanName, mbd, args);
 							}
 							finally {
