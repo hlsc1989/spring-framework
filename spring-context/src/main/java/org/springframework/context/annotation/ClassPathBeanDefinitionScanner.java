@@ -64,6 +64,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 
 	private final BeanDefinitionRegistry registry;
 
+	// 默认的 BeanDefinition，里面有一些默认的属性
 	private BeanDefinitionDefaults beanDefinitionDefaults = new BeanDefinitionDefaults();
 
 	@Nullable
@@ -284,7 +285,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 				candidate.setScope(scopeMetadata.getScopeName());
 				// 生成 Bean名称
 				String beanName = this.beanNameGenerator.generateBeanName(candidate, this.registry);
-				// 如果不是 Spring注解的Bean，则为Bean设置默认值
+				// 为 Bean设置默认值
 				if (candidate instanceof AbstractBeanDefinition) {
 					postProcessBeanDefinition((AbstractBeanDefinition) candidate, beanName);
 				}
@@ -295,11 +296,11 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 				// 根据Bean名称检查指定的Bean是否需要在容器中注册，或者在容器中冲突
 				if (checkCandidate(beanName, candidate)) {
 					BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(candidate, beanName);
-					// 根据注解中配置的作用域，为Bean应用响应的代理模式
+					// 根据注解中配置的作用域，为Bean应用响应的代理模式，从@RefreshScope、@Scopre注解中拿到
 					definitionHolder =
 							AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
 					beanDefinitions.add(definitionHolder);
-					// 向容器注册扫描的Bean
+					// 向容器注册扫描的Bean，这个就和xml的后续是一致的了
 					registerBeanDefinition(definitionHolder, this.registry);
 				}
 			}
@@ -345,9 +346,11 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 	 * bean definition has been found for the specified name
 	 */
 	protected boolean checkCandidate(String beanName, BeanDefinition beanDefinition) throws IllegalStateException {
+		// 判断是否已经解析了这个 BeanDefinition
 		if (!this.registry.containsBeanDefinition(beanName)) {
 			return true;
 		}
+
 		BeanDefinition existingDef = this.registry.getBeanDefinition(beanName);
 		BeanDefinition originatingDef = existingDef.getOriginatingBeanDefinition();
 		if (originatingDef != null) {

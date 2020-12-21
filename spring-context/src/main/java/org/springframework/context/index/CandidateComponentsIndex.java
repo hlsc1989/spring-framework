@@ -98,6 +98,7 @@ public class CandidateComponentsIndex {
 
 		Entry(String type) {
 			this.type = type;
+			// 获取包名
 			this.packageName = ClassUtils.getPackageName(type);
 		}
 

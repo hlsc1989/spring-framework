@@ -274,17 +274,21 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 		return getResourceLoader().getResource(location);
 	}
 
+	// 获取资源
 	@Override
 	public Resource[] getResources(String locationPattern) throws IOException {
 		Assert.notNull(locationPattern, "Location pattern must not be null");
+		// 如果是 calsspath*:开头的
 		if (locationPattern.startsWith(CLASSPATH_ALL_URL_PREFIX)) {
 			// a class path resource (multiple resources for same name possible)
+			// 匹配 * ? { } 字符
 			if (getPathMatcher().isPattern(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()))) {
 				// a class path resource pattern
 				return findPathMatchingResources(locationPattern);
 			}
 			else {
 				// all class path resources with the given name
+				// 获取配置路径下面的资源
 				return findAllClassPathResources(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()));
 			}
 		}
@@ -492,8 +496,11 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	 * @see org.springframework.util.PathMatcher
 	 */
 	protected Resource[] findPathMatchingResources(String locationPattern) throws IOException {
+		// 获取根路径，根路径是指配置的路径的根路径  classpath*:com/test/test/**/*.class  就是 classpath*:com/test/test/
 		String rootDirPath = determineRootDir(locationPattern);
+		// 获取 后面的路径
 		String subPattern = locationPattern.substring(rootDirPath.length());
+		// 获取根路径下的资源
 		Resource[] rootDirResources = getResources(rootDirPath);
 		Set<Resource> result = new LinkedHashSet<>(16);
 		for (Resource rootDirResource : rootDirResources) {
@@ -513,6 +520,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 				result.addAll(doFindPathMatchingJarResources(rootDirResource, rootDirUrl, subPattern));
 			}
 			else {
+				// 获取所有的资源，递归目录找下去
 				result.addAll(doFindPathMatchingFileResources(rootDirResource, subPattern));
 			}
 		}
@@ -700,6 +708,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 
 		File rootDir;
 		try {
+			// 获取根路径文件
 			rootDir = rootDirResource.getFile().getAbsoluteFile();
 		}
 		catch (FileNotFoundException ex) {
@@ -715,6 +724,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 			}
 			return Collections.emptySet();
 		}
+		// 文件循环获取资源
 		return doFindMatchingFileSystemResources(rootDir, subPattern);
 	}
 

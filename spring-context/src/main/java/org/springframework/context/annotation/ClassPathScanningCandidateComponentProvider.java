@@ -109,6 +109,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	@Nullable
 	private MetadataReaderFactory metadataReaderFactory;
 
+	//
 	@Nullable
 	private CandidateComponentsIndex componentsIndex;
 
@@ -312,6 +313,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 			return addCandidateComponentsFromIndex(this.componentsIndex, basePackage);
 		}
 		else {
+			// 扫描包
 			return scanCandidateComponents(basePackage);
 		}
 	}
@@ -418,6 +420,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 			// 将包 处理成 classpath*: com/**/*.class的格式
 			String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
 					resolveBasePackage(basePackage) + '/' + this.resourcePattern;
+			// 获取所有的资源文件
 			Resource[] resources = getResourcePatternResolver().getResources(packageSearchPath);
 			boolean traceEnabled = logger.isTraceEnabled();
 			boolean debugEnabled = logger.isDebugEnabled();
@@ -425,10 +428,13 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 				if (traceEnabled) {
 					logger.trace("Scanning " + resource);
 				}
+				// 如果可读
 				if (resource.isReadable()) {
 					try {
+						// 获取元数据解析类，通过 SimpleMetadataReader解析，里面是通过ASM框架解析class文件的
 						MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(resource);
 						if (isCandidateComponent(metadataReader)) {
+							// 解析成 BeanDefinition
 							ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);
 							sbd.setSource(resource);
 							if (isCandidateComponent(sbd)) {

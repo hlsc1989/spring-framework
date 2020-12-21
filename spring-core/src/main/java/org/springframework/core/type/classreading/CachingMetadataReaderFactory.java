@@ -119,6 +119,7 @@ public class CachingMetadataReaderFactory extends SimpleMetadataReaderFactory {
 		if (this.metadataReaderCache instanceof ConcurrentMap) {
 			// No synchronization necessary...
 			MetadataReader metadataReader = this.metadataReaderCache.get(resource);
+			// 如果为空，拿到一个 SimpleMetadataReader
 			if (metadataReader == null) {
 				metadataReader = super.getMetadataReader(resource);
 				this.metadataReaderCache.put(resource, metadataReader);
