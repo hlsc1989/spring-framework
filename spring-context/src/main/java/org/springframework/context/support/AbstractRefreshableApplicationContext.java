@@ -125,7 +125,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			closeBeanFactory();
 		}
 		try {
-			// 创建 IOC容器
+			// 创建 IOC容器，如果父容器里面有 IOC容器，那么也将 两个IOC容器设置父子级关系
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
 			beanFactory.setSerializationId(getId());
 			// 对IOC容器进行定制化
@@ -198,6 +198,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * @see org.springframework.beans.factory.support.DefaultListableBeanFactory#setAllowRawInjectionDespiteWrapping
 	 */
 	protected DefaultListableBeanFactory createBeanFactory() {
+		// 创建容器，如果是子容器，将父容器的IOC容器也设置对应的父子级， 就是beanFactory设置parentBeanFactory， 父容器就是设置 null
 		return new DefaultListableBeanFactory(getInternalParentBeanFactory());
 	}
 

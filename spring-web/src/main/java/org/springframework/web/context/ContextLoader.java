@@ -296,7 +296,7 @@ public class ContextLoader {
 				}
 			}
 
-			// 设置属性
+			// 将 Spring父容器的设置到 上一层容器（tomcat等servlet容器）的属性中去，Spring子容器通过这个参数获得
 			servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, this.context);
 
 			ClassLoader ccl = Thread.currentThread().getContextClassLoader();
@@ -398,7 +398,7 @@ public class ContextLoader {
 						ObjectUtils.getDisplayString(sc.getContextPath()));
 			}
 		}
-		// 设置servlet上下文
+		// 设置 servlet上下文，这边的sc是 tomcat等其他容器的上下文
 		wac.setServletContext(sc);
 		// 获取配置文件路径（contextConfigLocation）
 		String configLocationParam = sc.getInitParameter(CONFIG_LOCATION_PARAM);

@@ -485,6 +485,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	@Override
 	protected void onRefresh(ApplicationContext context) {
+		// 初始化
 		initStrategies(context);
 	}
 
@@ -493,14 +494,25 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
 	 */
 	protected void initStrategies(ApplicationContext context) {
+		// 初始化九大组件
+
+		// 初始化多文件上传组件
 		initMultipartResolver(context);
+		// 初始化国际化组件
 		initLocaleResolver(context);
+		// 初始化模板主题组件，springMvc中，一个主题对应一个properties文件，里面存放着当前主题相关的所有资源（图片、css等等）
 		initThemeResolver(context);
+		// 初始化 HandlerMapping
 		initHandlerMappings(context);
+		// 初始化 适配拦截器，固定的servlet适配不同的 handler
 		initHandlerAdapters(context);
+		// 初始化异常组件，处理 Handler过程中产生的异常情况
 		initHandlerExceptionResolvers(context);
+		// 初始化 视图预处理组件，从request中获取 viewName。viewResolver是根据viewName查找 View的，但有些 Handler处理完成之后，没有设置 view也没有设置 viewName，这个时候就需要这个组件来从 request中查找 viewName
 		initRequestToViewNameTranslator(context);
+		// 初始化 viewResolver，将 Controller层返回的 String类型的视图名 viewName，解析成 View。View是用来渲染页面的，它会将程序返回的参数和数据填入模板中，在这个过程中，ViewResolver会找到渲染所用的模板和所用的技术(jsp等等)
 		initViewResolvers(context);
+		// 初始化 redirect组件
 		initFlashMapManager(context);
 	}
 

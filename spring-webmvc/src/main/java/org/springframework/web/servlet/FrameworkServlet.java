@@ -668,7 +668,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 		// 设置环境变量
 		wac.setEnvironment(getEnvironment());
-		// 设置父容器
+		// 设置父容器，这一步关联 getInternalParentBeanFactory()方法，已经将父容器设置上去了
 		wac.setParent(parent);
 		// 获取配置文件的路径
 		String configLocation = getContextConfigLocation();
