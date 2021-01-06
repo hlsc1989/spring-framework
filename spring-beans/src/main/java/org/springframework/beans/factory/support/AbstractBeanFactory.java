@@ -250,13 +250,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			String name, @Nullable Class<T> requiredType, @Nullable Object[] args, boolean typeCheckOnly)
 			throws BeansException {
 
-		// 根据指定的名称获取被管理Bean的名称，玻璃指定名称中对容器的相关依赖
-		// 如果指定的是别名，将别名转换为规范的Bean名称
+		// 根据指定的名称获取被管理Bean的名称，剥离指定名称中对容器的相关依赖
+		// 如果指定的是别名，将别名转换为规范的 Bean名称
 		String beanName = transformedBeanName(name);
 		Object bean;
 
 		// Eagerly check singleton cache for manually registered singletons.
-		// 先从缓存中判断是否已经有被创建的单例Bean，对于单例Bean，容器中只创建一次
+		// 先从缓存中判断是否已经有被创建的单例 Bean，对于单例 Bean，容器中只创建一次
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
 			if (logger.isTraceEnabled()) {
@@ -269,7 +269,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 			// 获取给定Bean的实例对象，主要是完成 FactoryBean的相关处理
-			// BeanFactory是管理容器中 Bean的工厂，FactoryBean是穿件对象的工厂Bean，两者有区别
+			// BeanFactory是管理容器中 Bean的工厂，FactoryBean是创建对象的工厂Bean，两者有区别
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
 		// 缓存没有正在创建的单例 Bean
@@ -323,6 +323,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				checkMergedBeanDefinition(mbd, beanName, args);
 
 				// Guarantee initialization of beans that the current bean depends on.
+				// 如果依赖的 Bean没有实例化，先实例化依赖的 Bean
 				String[] dependsOn = mbd.getDependsOn();
 				if (dependsOn != null) {
 					for (String dep : dependsOn) {
@@ -330,8 +331,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 							throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 									"Circular depends-on relationship between '" + beanName + "' and '" + dep + "'");
 						}
+						// 将依赖的Bean放入一个集合
 						registerDependentBean(dep, beanName);
 						try {
+							// 获取依赖的 Bean，如果依赖 Bean没有创建，则会创建
+							// 这个是 递归方法
 							getBean(dep);
 						}
 						catch (NoSuchBeanDefinitionException ex) {
@@ -342,7 +346,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 
 				// Create bean instance.
+				// 如果是单例 Bean
 				if (mbd.isSingleton()) {
+					// getSingleton方法，将创建好的 Bean放进 singletonObjects （一级缓存）
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
 							// 创建 Bean
@@ -356,6 +362,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 							throw ex;
 						}
 					});
+
+					// 这一步会将实例化的单例 Bean 放进 factoryBeanInstanceCache (单例 Bean容器)
 					bean = getObjectForBeanInstance(sharedInstance, name, beanName, mbd);
 				}
 
@@ -364,7 +372,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					Object prototypeInstance = null;
 					try {
 						beforePrototypeCreation(beanName);
-						// 创建 Bean
+						// 创建原型 Bean
 						prototypeInstance = createBean(beanName, mbd, args);
 					}
 					finally {
