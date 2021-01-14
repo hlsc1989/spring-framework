@@ -74,6 +74,7 @@ public class OrderComparator implements Comparator<Object> {
 	}
 
 	private int doCompare(@Nullable Object o1, @Nullable Object o2, @Nullable OrderSourceProvider sourceProvider) {
+		// 优先判断是否实现了 PriorityOrdered接口，如果实现了，优先级高于实现 Ordered接口
 		boolean p1 = (o1 instanceof PriorityOrdered);
 		boolean p2 = (o2 instanceof PriorityOrdered);
 		if (p1 && !p2) {

@@ -222,6 +222,7 @@ final class PostProcessorRegistrationDelegate {
 			}
 		}
 
+		// 实现了 PriorityOrdered接口的优先级高
 		// First, register the BeanPostProcessors that implement PriorityOrdered.
 		sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
 		registerBeanPostProcessors(beanFactory, priorityOrderedPostProcessors);

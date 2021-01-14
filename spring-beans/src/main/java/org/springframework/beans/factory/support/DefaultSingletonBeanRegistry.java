@@ -202,6 +202,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 						if (singletonObject == null) {
 							ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 							if (singletonFactory != null) {
+								// 如果没有二级缓存会怎么样？会发现 如果是被代理的类，会重新一个代理 Bean，这样的话单例 Bean就不行了，所以需要引入二级缓存来存放 生成的代理对象
 								singletonObject = singletonFactory.getObject();
 								// 如果三级缓存中有，则将实例化的 Bean放进二级缓存，并从三级缓存中移除
 								this.earlySingletonObjects.put(beanName, singletonObject);
