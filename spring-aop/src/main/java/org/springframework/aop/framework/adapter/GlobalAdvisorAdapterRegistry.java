@@ -33,6 +33,7 @@ public final class GlobalAdvisorAdapterRegistry {
 	/**
 	 * Keep track of a single instance so we can return it to classes that request it.
 	 */
+	// 这个构造里面会新增一些 适配器
 	private static AdvisorAdapterRegistry instance = new DefaultAdvisorAdapterRegistry();
 
 	/**

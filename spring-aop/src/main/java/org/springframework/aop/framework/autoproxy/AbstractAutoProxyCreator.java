@@ -340,11 +340,11 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		}
 
 		// Create proxy if we have advice.
-		// 创建代理对象，调用多次的话，生成的是不同的代理对象，（解决循环依赖不能使用二级代理的问题，因为如果是单例 Bean的话，这边每次都会生成一个新的 代理Bean）
+		// 找到合格的切面
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
 		if (specificInterceptors != DO_NOT_PROXY) {
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
-			// 创建代理
+			// 创建代理对象，调用多次的话，生成的是不同的代理对象，（解决循环依赖不能使用二级代理的问题，因为如果是单例 Bean的话，这边每次都会生成一个新的 代理Bean）
 			Object proxy = createProxy(
 					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
 			this.proxyTypes.put(cacheKey, proxy.getClass());
