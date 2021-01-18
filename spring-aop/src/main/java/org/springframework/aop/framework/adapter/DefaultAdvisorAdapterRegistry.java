@@ -76,6 +76,7 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 		throw new UnknownAdviceTypeException(advice);
 	}
 
+	// 获取方法拦截器，即我们配置的切面方法处理
 	@Override
 	public MethodInterceptor[] getInterceptors(Advisor advisor) throws UnknownAdviceTypeException {
 		List<MethodInterceptor> interceptors = new ArrayList<>(3);
@@ -85,6 +86,7 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 		}
 		for (AdvisorAdapter adapter : this.adapters) {
 			if (adapter.supportsAdvice(advice)) {
+				// 这个里面具体看一些实现，MethodBeforeAdviceAdapter、AfterReturningAdviceAdapter、ThrowsAdviceAdapter等
 				interceptors.add(adapter.getInterceptor(advisor));
 			}
 		}
@@ -94,6 +96,7 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 		return interceptors.toArray(new MethodInterceptor[0]);
 	}
 
+	// 增加适配器
 	@Override
 	public void registerAdvisorAdapter(AdvisorAdapter adapter) {
 		this.adapters.add(adapter);
